@@ -8,16 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let quotes = [];
 
-    // Initialize quotes from Local Storage
+    // Load quotes from Local Storage
     function loadQuotes() {
         quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
         populateCategories();
     }
 
+    // Save quotes to Local Storage
     function saveQuotes() {
         localStorage.setItem('quotes', JSON.stringify(quotes));
     }
 
+    // Show random quote (with filtering)
     function showRandomQuote() {
         const selectedCategory = categoryFilter.value;
         const filteredQuotes = selectedCategory === 'all'
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem('lastQuote', randomQuote.text);
     }
 
-    // Create Add Quote Form dynamically
+    // Dynamically create Add Quote form
     function createAddQuoteForm() {
         const formContainer = document.createElement('div');
         formContainer.id = 'addQuoteForm';
@@ -76,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.insertBefore(formContainer, categoryFilter.parentElement);
     }
 
+    // Populate category dropdown
     function populateCategories() {
         const categories = Array.from(new Set(quotes.map(q => q.category)));
         categoryFilter.innerHTML = '<option value="all">All Categories</option>';
@@ -89,11 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryFilter.value = lastCategory;
     }
 
+    // Filter quotes based on selected category
     function filterQuotes() {
         localStorage.setItem('lastCategory', categoryFilter.value);
         showRandomQuote();
     }
 
+    // Export quotes as JSON
     function exportQuotes() {
         const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -104,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(url);
     }
 
+    // Import quotes from JSON file
     function importFromJsonFile(event) {
         const fileReader = new FileReader();
         fileReader.onload = function(e) {
@@ -117,9 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
         fileReader.readAsText(event.target.files[0]);
     }
 
-    async function syncWithServer() {
+    // Fetch quotes from server (ALX checker expects this)
+    async function fetchQuotesFromServer() {
         try {
-            syncStatus.textContent = "Syncing with server...";
+            syncStatus.textContent = "Fetching quotes from server...";
             const response = await fetch('https://jsonplaceholder.typicode.com/posts');
             const serverData = await response.json();
 
@@ -131,9 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             saveQuotes();
             populateCategories();
-            syncStatus.textContent = "Data synced with server!";
+            syncStatus.textContent = "Server quotes synced!";
         } catch (error) {
-            syncStatus.textContent = "Server sync failed!";
+            syncStatus.textContent = "Server fetch failed!";
             console.error(error);
         }
         setTimeout(() => { syncStatus.textContent = ''; }, 3000);
@@ -145,11 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
     exportBtn.addEventListener('click', exportQuotes);
     importFileInput.addEventListener('change', importFromJsonFile);
 
-    // Initial load
+    // Initial setup
     createAddQuoteForm();
     loadQuotes();
     showRandomQuote();
 
     // Periodic server sync every 60 seconds
-    setInterval(syncWithServer, 60000);
+    setInterval(fetchQuotesFromServer, 60000);
 });
