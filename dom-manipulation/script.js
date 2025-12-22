@@ -186,6 +186,33 @@ async function postQuoteToServer(quote) {
 }
 
 // =====================
+// Sync Local Quotes with Server
+// =====================
+async function syncQuotes() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const serverData = await response.json();
+        const serverQuotes = serverData.map(item => ({ text: item.title, category: 'server' }));
+
+        // Merge server quotes with local, server takes precedence
+        const mergedQuotes = [...serverQuotes];
+        quotes.forEach(localQuote => {
+            if (!serverQuotes.some(q => q.text === localQuote.text && q.category === localQuote.category)) {
+                mergedQuotes.push(localQuote);
+            }
+        });
+
+        quotes = mergedQuotes;
+        saveQuotes();
+        populateCategories();
+        showRandomQuote();
+        console.log('Quotes synced with server successfully.');
+    } catch (err) {
+        console.error('Failed to sync quotes:', err);
+    }
+}
+
+// =====================
 // Initialize App
 // =====================
 document.addEventListener('DOMContentLoaded', () => {
@@ -193,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateCategories();
     createAddQuoteForm();
     showRandomQuote();
-    fetchQuotesFromServer();
+    syncQuotes(); // <-- Sync local quotes with server on load
 
     if (newQuoteBtn) newQuoteBtn.addEventListener('click', showRandomQuote);
     if (categoryFilter) categoryFilter.addEventListener('change', filterQuotes);
