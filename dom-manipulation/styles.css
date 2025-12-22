@@ -1,0 +1,36 @@
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#quoteContainer, #addQuoteForm, #filterContainer, #importExport {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#quoteDisplay {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+input, select, button {
+    padding: 8px;
+    margin: 5px 0;
+}
+
+button {
+    cursor: pointer;
+}
