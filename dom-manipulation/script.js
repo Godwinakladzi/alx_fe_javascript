@@ -147,21 +147,21 @@ async function syncQuotesWithServer() {
     );
 
     if (conflicts.length) {
-        syncStatus.textContent = `${conflicts.length} conflict(s) detected. Server version takes precedence.`;
+        syncStatus.textContent = `${conflicts.length} conflict(s) detected. Server version applied.`;
         resolveConflictsBtn.hidden = false;
     } else {
-        syncStatus.textContent = "Sync complete. No conflicts detected.";
+        syncStatus.textContent = "Sync complete. Local quotes updated.";
         resolveConflictsBtn.hidden = true;
     }
 
-    // Merge server quotes
+    // Merge server quotes not already in local
     serverQuotes.forEach(serverQuote => {
         if (!quotes.some(q => q.text === serverQuote.text && q.category === serverQuote.category)) {
             quotes.push(serverQuote);
         }
     });
 
-    // Resolve conflicts automatically
+    // Resolve conflicts automatically (server takes precedence)
     conflicts.forEach(conflict => {
         const serverVersion = serverQuotes.find(s => s.text === conflict.text);
         const index = quotes.findIndex(q => q.text === conflict.text);
@@ -173,12 +173,12 @@ async function syncQuotesWithServer() {
     showRandomQuote();
 }
 
-// Manual conflict resolution (optional)
+// Manual conflict resolution (keep local version)
 resolveConflictsBtn.addEventListener("click", () => {
     if (!conflicts.length) return;
     conflicts.forEach(conflict => {
         const index = quotes.findIndex(q => q.text === conflict.text);
-        if (index !== -1) quotes[index] = conflict; // keep local version
+        if (index !== -1) quotes[index] = conflict;
     });
     saveQuotes();
     populateCategories();
