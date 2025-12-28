@@ -7,32 +7,44 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Dynamic Quote Generator</h1>
+    <header>
+        <h1>Dynamic Quote Generator</h1>
+    </header>
 
-    <div id="quoteContainer">
-        <div id="quoteDisplay">Your quote will appear here.</div>
+    <!-- Quote Display Section -->
+    <section id="quoteContainer">
+        <div id="quoteDisplay" aria-live="polite">Your quote will appear here.</div>
         <button id="newQuote">Show New Quote</button>
-    </div>
+    </section>
 
-    <div id="addQuoteForm">
+    <!-- Add Quote Section -->
+    <section id="addQuoteSection">
+        <h2>Add a New Quote</h2>
         <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
         <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
         <button id="addQuoteBtn">Add Quote</button>
-    </div>
+    </section>
 
-    <div id="filterContainer">
+    <!-- Filter Section -->
+    <section id="filterSection">
         <label for="categoryFilter">Filter by Category:</label>
         <select id="categoryFilter">
             <option value="all">All Categories</option>
         </select>
-    </div>
+    </section>
 
-    <div id="importExport">
+    <!-- Import / Export Section -->
+    <section id="importExportSection">
+        <h2>Import / Export Quotes</h2>
         <input type="file" id="importFile" accept=".json" />
         <button id="exportBtn">Export Quotes</button>
-    </div>
+    </section>
 
-    <div id="syncStatus"></div>
+    <!-- Conflict & Sync Status -->
+    <section id="syncStatusContainer">
+        <p id="syncStatus"></p>
+        <button id="resolveConflictsBtn" hidden>Resolve Conflicts</button>
+    </section>
 
     <script src="script.js"></script>
 </body>
